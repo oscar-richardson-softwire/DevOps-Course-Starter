@@ -58,6 +58,7 @@ In order to use the app, you will need to do the following:
 in your `.env` file to be this `id`
 10. Make a `GET` request to `https://api.trello.com/1/boards/<yourBoardId>/lists?key=<yourApiKey>&token=<yourApiToken>`
 11. Find the `id` property of the list with the `name` `'To Do'` in the response and set the value for `TRELLO_TO_DO_COLUMN_LIST_ID` to be this `id`
+12. Find the `id` property of the list with the `name` `'Done'` in the response and set the value for `TRELLO_DONE_COLUMN_LIST_ID` to be this `id`
 
 ## Running the App
 

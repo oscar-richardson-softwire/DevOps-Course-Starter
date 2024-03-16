@@ -21,7 +21,7 @@ def make_request(http_method, url, query = {}):
     query['token'] = api_token
 
     headers = {}
-    if (http_method == 'POST'):
+    if (http_method == 'POST' or http_method == 'PUT'):
         headers['Accept'] = 'application/json'
 
     response = requests.request(

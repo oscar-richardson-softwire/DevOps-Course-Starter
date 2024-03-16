@@ -63,3 +63,30 @@ def add_item(title):
     item = transform_item(untransformed_item)
 
     return item
+
+def complete_item(id):
+    """
+    Changes the status of the item with the specified id 
+    from 'Not Started' to 'Done' and returns this item 
+    in the format expected by the app.
+
+    Args:
+        id: The id of the item.
+
+    Returns:
+        item: The item in the format expected by the app.
+    """
+
+    done_column_list_id = os.getenv('TRELLO_DONE_COLUMN_LIST_ID')
+
+    url = f'https://api.trello.com/1/cards/{id}'
+
+    query = {
+        'idList': done_column_list_id,
+    }
+
+    untransformed_item = make_request(http_method='PUT', url=url, query=query).json()
+
+    item = transform_item(untransformed_item)
+
+    return item
