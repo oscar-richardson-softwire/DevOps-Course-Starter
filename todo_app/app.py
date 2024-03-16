@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect
-from todo_app.data.trello_items import get_items, add_item, complete_item
+from todo_app.data.trello_items import get_items, add_item, update_item_status
 from todo_app.flask_config import Config
 
 app = Flask(__name__)
@@ -17,8 +17,9 @@ def index_post():
     add_item(item)
     return redirect("/")
 
-@app.post('/complete-item')
-def complete_item_post():
+@app.post('/update-item-status')
+def update_item_status_post():
     id = request.form.get('id')
-    complete_item(id)
+    new_status = request.form.get('new-status')
+    update_item_status(id, new_status)
     return redirect("/")

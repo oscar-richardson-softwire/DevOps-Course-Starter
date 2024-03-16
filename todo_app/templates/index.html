@@ -13,10 +13,16 @@
       <ul class="list-group mb-4">
         {% for item in items %}
           <li>{{ item.title }} ({{ item.status }})</li>
-          <form method="post" action="/complete-item">
+          <form method="post" action="/update-item-status">
             <input type="hidden" name="id" id="id" value={{ item.id }}/>
-            <input type="submit" value="Mark completed" />
-        </form>
+            {% if item.status == "Not Started" %}
+              <input type="hidden" name="new-status" id="new-status" value="Done"/>
+              <input type="submit" value="Mark as Done"/>
+            {% else %}
+              <input type="hidden" name="new-status" id="new-status" value="Not Started"/>
+              <input type="submit" value="Mark as Not Started"/>
+            {% endif %}
+          </form>
         {% endfor %}
       </ul>
       <form method="post">

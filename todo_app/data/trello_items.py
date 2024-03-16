@@ -64,25 +64,29 @@ def add_item(title):
 
     return item
 
-def complete_item(id):
+def update_item_status(id, new_status):
     """
     Changes the status of the item with the specified id 
-    from 'Not Started' to 'Done' and returns this item 
+    to the specified status and returns this item 
     in the format expected by the app.
 
     Args:
         id: The id of the item.
+        new_status: The new status of the item.
 
     Returns:
         item: The item in the format expected by the app.
     """
 
-    done_column_list_id = os.getenv('TRELLO_DONE_COLUMN_LIST_ID')
+    if new_status == 'Not Started':
+        column_list_id = os.getenv('TRELLO_TO_DO_COLUMN_LIST_ID')
+    else:
+        column_list_id = os.getenv('TRELLO_DONE_COLUMN_LIST_ID')
 
     url = f'https://api.trello.com/1/cards/{id}'
 
     query = {
-        'idList': done_column_list_id,
+        'idList': column_list_id,
     }
 
     untransformed_item = make_request(http_method='PUT', url=url, query=query).json()
