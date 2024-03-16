@@ -1,6 +1,6 @@
 import os
-from todo_app.data.helpers.trello.get_untransformed_items import get_untransformed_items
 from todo_app.data.helpers.trello.make_request import make_request
+from todo_app.data.helpers.trello.map_list_name_to_item_status import map_list_name_to_item_status
 from todo_app.data.helpers.trello.transform_item import transform_item
 
 def get_items():
@@ -13,9 +13,27 @@ def get_items():
         items: The list of saved items in the format expected by the app.
     """
 
-    untransformed_items = get_untransformed_items()
+    board_id = os.getenv('TRELLO_BOARD_ID')
 
-    items = list(map(transform_item, untransformed_items))
+    url = f'https://api.trello.com/1/boards/{board_id}/lists'
+
+    query = {
+        'cards': 'open',
+        'card_fields': 'id,name'
+    }
+
+    lists = make_request(http_method='GET', url=url, query=query).json()
+
+    items = []
+
+    for list in lists:
+        for card in list['cards']:
+            item = {
+                'id': card['id'],
+                'status': map_list_name_to_item_status(list['name']),
+                'title': card['name']
+            }
+            items.append(item)
 
     return items
 

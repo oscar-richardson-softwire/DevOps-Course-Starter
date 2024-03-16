@@ -18,7 +18,6 @@ def transform_item(untransformed_item):
     status = get_status_for_item(untransformed_item)
     title = untransformed_item['name']
     
-
     item = {
         'id': id,
         'status': status,

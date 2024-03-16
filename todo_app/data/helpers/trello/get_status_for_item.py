@@ -1,4 +1,5 @@
 from todo_app.data.helpers.trello.make_request import make_request
+from todo_app.data.helpers.trello.map_list_name_to_item_status import map_list_name_to_item_status
 
 def get_status_for_item(untransformed_item):
     """
@@ -17,10 +18,6 @@ def get_status_for_item(untransformed_item):
 
     list = make_request(http_method='GET', url=url).json()
 
-    match list['name']:
-        case 'To Do':
-            item_status = 'Not Started'
-        case _:
-            item_status = list['name']
+    item_status = map_list_name_to_item_status(list['name'])
 
     return item_status
