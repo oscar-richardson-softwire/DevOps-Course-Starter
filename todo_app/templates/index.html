@@ -9,19 +9,25 @@
 
   <div class="row">
     <div class="col-md-12">
-      <h2>Items</h2>
+      <h2>Not Started</h2>
       <ul class="list-group mb-4">
-        {% for item in view_model.items %}
-          <li>{{ item.title }} ({{ item.status }})</li>
+        {% for item in view_model.not_started_items %}
+          <li>{{ item.title }}</li>
           <form method="post" action="/update-item-status">
             <input type="hidden" name="id" id="id" value={{ item.id }}/>
-            {% if item.status == "Not Started" %}
-              <input type="hidden" name="new-status" id="new-status" value="Done"/>
-              <input type="submit" value="Mark as Done"/>
-            {% else %}
-              <input type="hidden" name="new-status" id="new-status" value="Not Started"/>
-              <input type="submit" value="Mark as Not Started"/>
-            {% endif %}
+            <input type="hidden" name="new-status" id="new-status" value="Done"/>
+            <input type="submit" value="Mark as Done"/>
+          </form>
+        {% endfor %}
+      </ul>
+      <h2>Done</h2>
+      <ul class="list-group mb-4">
+        {% for item in view_model.done_items %}
+          <li>{{ item.title }}</li>
+          <form method="post" action="/update-item-status">
+            <input type="hidden" name="id" id="id" value={{ item.id }}/>
+            <input type="hidden" name="new-status" id="new-status" value="Not Started"/>
+            <input type="submit" value="Mark as Not Started"/>
           </form>
         {% endfor %}
       </ul>
