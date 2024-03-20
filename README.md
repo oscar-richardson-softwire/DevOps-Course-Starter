@@ -97,7 +97,7 @@ $ pytest
 From the project root (`DevOps-Course-Starter`), run the following from your preferred shell:
 
 ```shell
-$ pytest todo_app/<rest of path to test file>
+$ pytest todo_app/<rest_of_path_to_test_file>
 ```
 
 E.g.,
@@ -111,7 +111,7 @@ $ pytest todo_app/data/classes/test_view_model.py
 From the project root (`DevOps-Course-Starter`), run the following from your preferred shell:
 
 ```shell
-$ pytest todo_app/<rest of path to test file>::<name of test function>
+$ pytest todo_app/<rest_of_path_to_test_file>::<name_of_test_function>
 ```
 
 E.g.,
