@@ -30,7 +30,9 @@ The project uses a virtual environment to isolate package dependencies. To creat
 $ poetry install
 ```
 
-You'll also need to clone a new `.env` file from the `.env.template` to store local configuration options. This is a one-time operation on first setup:
+## Environment variables
+
+You'll need to clone a new `.env` file from the `.env.template` to store local configuration options. This is a one-time operation on first setup:
 
 ```bash
 $ cp .env.template .env  # (first time only)
@@ -38,9 +40,29 @@ $ cp .env.template .env  # (first time only)
 
 The `.env` file is used by flask to set environment variables when running `flask run`. This enables things like development mode (which also enables features like hot reloading when you make a file change). There's also a [SECRET_KEY](https://flask.palletsprojects.com/en/2.3.x/config/#SECRET_KEY) variable which is used to encrypt the flask session cookie.
 
+### Trello REST API
+
+The app uses Trello to store to-do items (in the form of cards on a Trello board). The app interfaces with Trello using the [Trello REST API](https://developer.atlassian.com/cloud/trello/guides/rest-api/api-introduction/).
+
+In order to use the app, you will need to do the following:
+1. Create or sign into a [Trello account](https://trello.com/signup)
+2. Create a Trello [Power-Up](https://trello.com/power-ups/admin) (you'll need to associate this Power-Up to a workspace, so you may need to create a workspace if you don't already have one)
+3. After creating a Power-Up, generate a new API key
+4. Set the value for `TRELLO_API_KEY` in your `.env` file to be this new API key 
+5. Generate an API token by clicking on the link on the page displaying your new API key
+6. Set the value for `TRELLO_API_TOKEN` in your `.env` file to be this API token 
+7. Create a new Trello board (in the workspace associated to this Power-Up) to store the to-do cards
+8. Make a `GET` request to `https://api.trello.com/1/members/me/boards?key=<yourApiKey>&token=<yourApiToken>`
+(e.g., using a browser, curl, or a tool such as Postman or the Thunder Client Extension for VS Code)
+9. Find the `id` property of this newly created board in the response and set the value for `TRELLO_BOARD_ID`
+in your `.env` file to be this `id`
+10. Make a `GET` request to `https://api.trello.com/1/boards/<yourBoardId>/lists?key=<yourApiKey>&token=<yourApiToken>`
+11. Find the `id` property of the list with the `name` `'To Do'` in the response and set the value for `TRELLO_TO_DO_COLUMN_LIST_ID` to be this `id`
+12. Find the `id` property of the list with the `name` `'Done'` in the response and set the value for `TRELLO_DONE_COLUMN_LIST_ID` to be this `id`
+
 ## Running the App
 
-Once the all dependencies have been installed, start the Flask app in development mode within the Poetry environment by running:
+Once the all dependencies have been installed and the necessary environment variables have been set, start the Flask app in development mode within the Poetry environment by running:
 ```bash
 $ poetry run flask run
 ```
