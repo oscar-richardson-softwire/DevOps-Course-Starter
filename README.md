@@ -82,9 +82,15 @@ Now visit [`http://localhost:5000/`](http://localhost:5000/) in your web browser
 
 ## Testing
 
+### Directory structure
+
+Unit tests live in the same directory as the code that they test (e.g., `test_view_model.py` is in the same directory as `ViewModel.py`).
+
+Integration tests live in the `test_integration.py` file in the top level of the `todo_app` directory.
+
 ### Terminal
 
-#### Run all unit tests
+#### Run all unit and integration tests
 
 From the project root (`DevOps-Course-Starter`), run the following from your preferred shell:
 
@@ -92,7 +98,7 @@ From the project root (`DevOps-Course-Starter`), run the following from your pre
 $ pytest
 ```
 
-#### Run a single unit test file
+#### Run a single unit/integration test file
 
 From the project root (`DevOps-Course-Starter`), run the following from your preferred shell:
 
@@ -106,7 +112,7 @@ E.g.,
 $ pytest todo_app/data/classes/test_view_model.py
 ```
 
-#### Run a single unit test
+#### Run a single unit/integration test
 
 From the project root (`DevOps-Course-Starter`), run the following from your preferred shell:
 
@@ -126,10 +132,10 @@ $ pytest todo_app/data/classes/test_view_model.py::test_view_model_done_items_pr
 
 Select the 'Testing' tab from the 'Activity Bar', select 'Configure Python Tests', choose 'pytest', then choose '`todo_app`' as the folder containing the tests.
 
-#### Run all unit tests
+#### Run all unit and integration tests
 
 Select the 'Testing' tab from the 'Activity Bar', then select the play button icon, 'Run Tests' in the middle of the top bar on the tab.
 
-#### Run all unit tests in a directory or file, or run a single unit test
+#### Run all unit/integration tests in a directory or file, or run a single unit/integration test
 
 Select the 'Testing' tab from the 'Activity Bar', use the dropdown 'Explorer'-style menu to locate the directory/file/test, then hover over its name and click the play button icon, 'Run Test'.
