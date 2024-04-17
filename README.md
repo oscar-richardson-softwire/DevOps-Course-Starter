@@ -79,3 +79,63 @@ Press CTRL+C to quit
  * Debugger PIN: 113-666-066
 ```
 Now visit [`http://localhost:5000/`](http://localhost:5000/) in your web browser to view the app.
+
+## Testing
+
+### Directory structure
+
+Unit tests live in the same directory as the code that they test (e.g., `test_view_model.py` is in the same directory as `ViewModel.py`).
+
+Integration tests live in the `test_integration.py` file in the top level of the `todo_app` directory.
+
+### Terminal
+
+#### Run all unit and integration tests
+
+From the project root (`DevOps-Course-Starter`), run the following from your preferred shell:
+
+```shell
+$ poetry run pytest
+```
+
+#### Run a single unit/integration test file
+
+From the project root (`DevOps-Course-Starter`), run the following from your preferred shell:
+
+```shell
+$ poetry run pytest todo_app/<rest_of_path_to_test_file>
+```
+
+E.g.,
+
+```shell
+$ poetry run pytest todo_app/data/classes/test_view_model.py
+```
+
+#### Run a single unit/integration test
+
+From the project root (`DevOps-Course-Starter`), run the following from your preferred shell:
+
+```shell
+$ poetry run pytest todo_app/<rest_of_path_to_test_file>::<name_of_test_function>
+```
+
+E.g.,
+
+```shell
+$ poetry run pytest todo_app/data/classes/test_view_model.py::test_view_model_done_items_property_returns_items_with_status_done
+```
+
+### VSCode GUI
+
+#### Setup
+
+Select the 'Testing' tab from the 'Activity Bar', select 'Configure Python Tests', choose 'pytest', then choose '`todo_app`' as the folder containing the tests.
+
+#### Run all unit and integration tests
+
+Select the 'Testing' tab from the 'Activity Bar', then select the play button icon, 'Run Tests' in the middle of the top bar on the tab.
+
+#### Run all unit/integration tests in a directory or file, or run a single unit/integration test
+
+Select the 'Testing' tab from the 'Activity Bar', use the dropdown 'Explorer'-style menu to locate the directory/file/test, then hover over its name and click the play button icon, 'Run Test'.
