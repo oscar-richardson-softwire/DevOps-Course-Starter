@@ -8,12 +8,10 @@ class ViewModel:
     
     @property
     def not_started_items(self):
-        item_is_not_started = lambda item : item.status == 'Not Started'
-        not_started_items = list(filter(item_is_not_started, self._items))
+        not_started_items = [item for item in self._items if item.status == 'Not Started']
         return not_started_items
     
     @property
     def done_items(self):
-        item_is_done = lambda item : item.status == 'Done'
-        done_items = list(filter(item_is_done, self._items))
+        done_items = [item for item in self._items if item.status == 'Done']
         return done_items
