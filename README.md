@@ -95,7 +95,7 @@ Integration tests live in the `test_integration.py` file in the top level of the
 From the project root (`DevOps-Course-Starter`), run the following from your preferred shell:
 
 ```shell
-$ pytest
+$ poetry run pytest
 ```
 
 #### Run a single unit/integration test file
@@ -103,13 +103,13 @@ $ pytest
 From the project root (`DevOps-Course-Starter`), run the following from your preferred shell:
 
 ```shell
-$ pytest todo_app/<rest_of_path_to_test_file>
+$ poetry run pytest todo_app/<rest_of_path_to_test_file>
 ```
 
 E.g.,
 
 ```shell
-$ pytest todo_app/data/classes/test_view_model.py
+$ poetry run pytest todo_app/data/classes/test_view_model.py
 ```
 
 #### Run a single unit/integration test
@@ -117,13 +117,13 @@ $ pytest todo_app/data/classes/test_view_model.py
 From the project root (`DevOps-Course-Starter`), run the following from your preferred shell:
 
 ```shell
-$ pytest todo_app/<rest_of_path_to_test_file>::<name_of_test_function>
+$ poetry run pytest todo_app/<rest_of_path_to_test_file>::<name_of_test_function>
 ```
 
 E.g.,
 
 ```shell
-$ pytest todo_app/data/classes/test_view_model.py::test_view_model_done_items_property_returns_items_with_status_done
+$ poetry run pytest todo_app/data/classes/test_view_model.py::test_view_model_done_items_property_returns_items_with_status_done
 ```
 
 ### VSCode GUI
