@@ -139,3 +139,15 @@ Select the 'Testing' tab from the 'Activity Bar', then select the play button ic
 #### Run all unit/integration tests in a directory or file, or run a single unit/integration test
 
 Select the 'Testing' tab from the 'Activity Bar', use the dropdown 'Explorer'-style menu to locate the directory/file/test, then hover over its name and click the play button icon, 'Run Test'.
+
+### Infrastructure
+
+#### Provision a VM from an Ansible Control Node
+
+From the project root (`DevOps-Course-Starter`), run the following from your preferred shell:
+
+```shell
+$ ansible-playbook provision-vm.yml -i provision-vm-inventory
+```
+
+When prompted, enter the Trello API key and Trello API token from your `.env` file. Note that your input for these fields is hidden.
