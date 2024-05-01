@@ -39,8 +39,9 @@
 
   - name: Install project dependencies
     ansible.builtin.shell:
-      cmd: cd /opt/todoapp; /home/ec2-user/.local/bin/poetry install
+      cmd: /home/ec2-user/.local/bin/poetry install
       creates: /opt/todoapp/.venv
+      chdir: /opt/todoapp/
 
   - name: Create a .env file on the host
     ansible.builtin.template:
