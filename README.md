@@ -82,7 +82,7 @@ Now visit [`http://localhost:5000/`](http://localhost:5000/) in your web browser
 
 ## Running the app in Docker
 
-It is also possible to run the app inside a Docker container.
+It is also possible to run the app inside a Docker container, allowing you to run the app inside a dedicated, reproducible environment that is isolated from your local machine.
 
 ### Running the app in a production container
 
@@ -100,7 +100,7 @@ $ docker run --env-file .env -p 5000:8000 -it todo-app:prod
 
 Now visit [`http://localhost:8000/`](http://localhost:8000/) in your web browser to view the app.
 
-The `--env-file` flag loads the `.env` into the container.
+The `--env-file` flag loads the `.env` file into the container.
 
 The `-p` (or `--publish`) flag makes the container's port 8000 (where the app is running) available on your local machine's port 5000.
 
@@ -117,14 +117,14 @@ This creates a development image with the name `'todo-app'` and the tag `'dev'`.
 
 Once you have a development image, you can run a development container from it by running:
 ```bash
-$ docker run --env-file .env -p 5000:5000 --mount "type=bind,source=$(pwd)/todo_app,target=/opt/todoapp/todo_app" -it todo-app:prod
+$ docker run --env-file .env -p 5000:5000 --mount "type=bind,source=$(pwd)/todo_app,target=/opt/todoapp/todo_app" -it todo-app:dev
 ```
 
 Now visit [`http://localhost:5000/`](http://localhost:5000/) in your web browser to view the app.
 
-The `--env-file` flag loads the `.env` into the container.
+The `--env-file` flag loads the `.env` file into the container.
 
-The `-p` (or `--publish`) flag makes the container's port 5000 (where the app is running) available on your local machine's port 5000.
+The `-p` (or `--publish`) flag makes the container's port 5000 (where the app is running) available on your local machine's port 5000. This allows hot reloading of code changes without the need to rebuild the image.
 
 The `--mount` flag makes the `/todo_app` directory on your local machine available at `/opt/todoapp/todo_app` inside the container via a bind mount.
 
