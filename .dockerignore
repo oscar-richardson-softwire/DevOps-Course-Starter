@@ -1,0 +1,16 @@
+.git/
+.github/
+.pytest_cache
+.venv
+.vscode
+.dockerignore
+.env*
+.gitignore
+.gitpod.yml
+Dockerfile
+poetry.lock
+provision-vm-inventory
+provision-vm.yml
+README.md
+todoapp.service
+**/__pycache__/

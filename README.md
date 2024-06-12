@@ -60,7 +60,7 @@ in your `.env` file to be this `id`
 11. Find the `id` property of the list with the `name` `'To Do'` in the response and set the value for `TRELLO_TO_DO_COLUMN_LIST_ID` to be this `id`
 12. Find the `id` property of the list with the `name` `'Done'` in the response and set the value for `TRELLO_DONE_COLUMN_LIST_ID` to be this `id`
 
-## Running the App
+## Running the app locally
 
 Once the all dependencies have been installed and the necessary environment variables have been set, start the Flask app in development mode within the Poetry environment by running:
 ```bash
@@ -79,6 +79,56 @@ Press CTRL+C to quit
  * Debugger PIN: 113-666-066
 ```
 Now visit [`http://localhost:5000/`](http://localhost:5000/) in your web browser to view the app.
+
+## Running the app in Docker
+
+It is also possible to run the app inside a Docker container, allowing you to run the app inside a dedicated, reproducible environment that is isolated from your local machine.
+
+### Running the app in a production container
+
+To run the app in a production container (which uses Gunicorn, a true production-ready server), first run the following command to build a production image:
+```bash
+$ docker build --target production -t todo-app:prod .
+```
+
+This creates a production image with the name `'todo-app'` and the tag `'prod'`.
+
+Once you have a production image, you can run a production container from it by running:
+```bash
+$ docker run --env-file .env -p 5000:8000 -it todo-app:prod
+```
+
+Now visit [`http://localhost:8000/`](http://localhost:8000/) in your web browser to view the app.
+
+The `--env-file` flag loads the `.env` file into the container.
+
+The `-p` (or `--publish`) flag makes the container's port 8000 (where the app is running) available on your local machine's port 5000.
+
+The `-it` (or `--interactive` + `--tty`) starts an interactive terminal when starting the container, allowing you to (for instance) use `Ctrl/Cmd + C` to exit the container.
+
+### Running the app in a development container
+
+To run the app in a development container (which uses Flask's development server with `FLASK_DEBUG` set to `true` to allow hot reloading of code changes), first run the following command to build a development image:
+```bash
+$ docker build --target development -t todo-app:dev .
+```
+
+This creates a development image with the name `'todo-app'` and the tag `'dev'`.
+
+Once you have a development image, you can run a development container from it by running:
+```bash
+$ docker run --env-file .env -p 5000:5000 --mount "type=bind,source=$(pwd)/todo_app,target=/opt/todoapp/todo_app" -it todo-app:dev
+```
+
+Now visit [`http://localhost:5000/`](http://localhost:5000/) in your web browser to view the app.
+
+The `--env-file` flag loads the `.env` file into the container.
+
+The `-p` (or `--publish`) flag makes the container's port 5000 (where the app is running) available on your local machine's port 5000. This allows hot reloading of code changes without the need to rebuild the image.
+
+The `--mount` flag makes the `/todo_app` directory on your local machine available at `/opt/todoapp/todo_app` inside the container via a bind mount.
+
+The `-it` (or `--interactive` + `--tty`) starts an interactive terminal when starting the container, allowing you to (for instance) use `Ctrl/Cmd + C` to exit the container.
 
 ## Testing
 
