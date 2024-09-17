@@ -176,6 +176,54 @@ E.g.,
 $ poetry run pytest todo_app/data/classes/test_view_model.py::test_view_model_done_items_property_returns_items_with_status_done
 ```
 
+### Docker
+
+#### Setup
+
+From the project root (`DevOps-Course-Starter`), run the following from your preferred shell:
+
+```shell
+$ docker build --target test --tag <name_you_want_to_give_to_test_image> .
+```
+
+#### Run all unit and integration tests
+
+From the project root (`DevOps-Course-Starter`), run the following from your preferred shell:
+
+```shell
+$ docker run --env-file .env.test <name_you_gave_to_test_image_during_setup> 
+```
+
+#### Run a single unit/integration test file
+
+From the project root (`DevOps-Course-Starter`), run the following from your preferred shell:
+
+```shell
+$ docker run --env-file .env.test <name_you_gave_to_test_image_during_setup> todo_app/<rest_of_path_to_test_file>
+```
+
+E.g.,
+
+```shell
+$ docker run --env-file .env.test test-image todo_app/data/classes/test_view_model.py
+```
+
+#### Run a single unit/integration test
+
+From the project root (`DevOps-Course-Starter`), run the following from your preferred shell:
+
+```shell
+$ docker run --env-file .env.test <name_you_gave_to_test_image_during_setup> todo_app/<rest_of_path_to_test_file>::<name_of_test_function>
+```
+
+E.g.,
+
+```shell
+$ docker run --env-file .env.test test-image todo_app/data/classes/test_view_model.py::test_view_model_done_items_property_returns_items_with_status_done
+```
+
+Note: the above commands work because anything after the image name gets appended to the `ENTRYPOINT` in the `Dockerfile` (i.e., `poetry run pytest`).
+
 ### VSCode GUI
 
 #### Setup
@@ -190,9 +238,9 @@ Select the 'Testing' tab from the 'Activity Bar', then select the play button ic
 
 Select the 'Testing' tab from the 'Activity Bar', use the dropdown 'Explorer'-style menu to locate the directory/file/test, then hover over its name and click the play button icon, 'Run Test'.
 
-### Infrastructure
+## Infrastructure
 
-#### Provision a VM from an Ansible Control Node
+### Provision a VM from an Ansible Control Node
 
 From the project root (`DevOps-Course-Starter`), run the following from your preferred shell:
 
