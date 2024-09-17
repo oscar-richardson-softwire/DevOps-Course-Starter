@@ -1,5 +1,13 @@
 name: Continuous Integration
-on: [push]
+on:
+  push:
+    paths-ignore:
+      - '**.md'
+      - 'architecture_diagrams/**'
+  pull_request:
+    paths-ignore:
+      - '**.md'
+      - 'architecture_diagrams/**'
 
 jobs:
   build:
