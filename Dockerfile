@@ -17,4 +17,4 @@ EXPOSE 5000
 ENTRYPOINT poetry run flask run --host=0.0.0.0
 
 FROM base AS test
-ENTRYPOINT poetry run pytest
+ENTRYPOINT ["poetry", "run", "pytest"]
