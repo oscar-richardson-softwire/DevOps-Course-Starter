@@ -19,7 +19,7 @@ def test_view_model_done_items_property_returns_items_with_status_done(view_mode
     done_items = view_model_and_filtered_items['done_items']
 
     # Act 
-    result = view_model.done_items
+    result = view_model.not_started_items
 
     # Assert
     assert result == done_items
