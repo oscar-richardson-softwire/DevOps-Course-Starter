@@ -1,7 +1,7 @@
 FROM python:3.12.3 AS base
 RUN curl -sSL https://install.python-poetry.org | python3 -
 ENV PATH=$PATH:/root/.local/bin/
-COPY pyproject.toml poetry.toml /opt/todoapp/
+COPY pyproject.toml poetry.toml .env.test /opt/todoapp/ 
 WORKDIR /opt/todoapp/
 RUN poetry install
 COPY todo_app /opt/todoapp/todo_app

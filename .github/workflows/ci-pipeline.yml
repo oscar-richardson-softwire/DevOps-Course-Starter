@@ -8,3 +8,4 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - run: docker build --target test --tag test-image .
+    - run: docker run --env-file .env.test test-image
