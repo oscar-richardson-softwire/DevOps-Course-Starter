@@ -130,6 +130,28 @@ The `--mount` flag makes the `/todo_app` directory on your local machine availab
 
 The `-it` (or `--interactive` + `--tty`) starts an interactive terminal when starting the container, allowing you to (for instance) use `Ctrl/Cmd + C` to exit the container.
 
+### Pushing a container image to the Docker Hub registry
+
+To store a container image on the Docker Hub registry, first run the following command to log in to Docker Hub locally:
+
+```bash
+$ docker login
+```
+
+Once you have logged in, build an image that you want to push by running:
+
+```bash
+$ docker build --target <name_of_build_phase> -t <docker_hub_user_name>/todo-app:<tag> .
+```
+
+Finally, push the image to Docker Hub by running:
+
+```bash
+$ docker push <docker_hub_user_name>/todo-app:<tag> .
+```
+
+This creates an image with the name `'todo-app'` under your user namespace on Docker Hub (trying to push just `todo-app:<tag>` will error because you won't have permission for the global namespace!).
+
 ## Testing
 
 ### Directory structure
