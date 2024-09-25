@@ -249,3 +249,87 @@ $ ansible-playbook provision-vm.yml -i provision-vm-inventory
 ```
 
 When prompted, enter the Trello API key and Trello API token from your `.env` file. Note that your input for these fields is hidden.
+
+## Manual deployment
+
+This section documents manually deploying the app to Azure as a Web App that pulls a container image from the Docker Hub registry.
+
+### Pushing a container image to the Docker Hub registry
+
+Note: The latest production image (at the time of writing) is already pushed to `oscarrichardson/todo-app:prod` on Docker Hub.
+
+To store a container image on the Docker Hub registry, first run the following command to log in to Docker Hub locally:
+
+```bash
+$ docker login
+```
+
+Once you have logged in, build an image that you want to push by running:
+
+```bash
+$ docker build --target <name_of_build_phase> -t <docker_hub_user_name>/todo-app:<tag> .
+```
+
+Finally, push the image to Docker Hub by running:
+
+```bash
+$ docker push <docker_hub_user_name>/todo-app:<tag> .
+```
+
+This creates an image with the name `'todo-app'` under your user namespace on Docker Hub (trying to push just `todo-app:<tag>` will error because you won't have permission for the global namespace!).
+
+### Deploying the container image to Azure Web App
+
+1. Follow [`these instructions`](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli) to install the Azure CLI on your machine if you don't have it installed already
+2. Open up a new terminal window and run:
+
+```bash
+$ az login
+```
+
+Which will launch a browser window to allow you to log in to your Azure account
+
+3. Make a note of the name of the resource group that you wish to create the Web App under (creating a new resource group if necessary). You can see the names of your resource groups by navigating to the [`Azure portal`](https://portal.azure.com/#home) -> [`Resource groups`](https://portal.azure.com/#browse/resourcegroups)
+4. Create an App Service Plan by running:
+
+```bash
+$ az appservice plan create --resource-group <resource_group_name> -n <name_for_appservice_plan_of_your_choice> --sku B1 --is-linux
+```
+
+5. Create the Web App by running:
+
+```bash
+$ az webapp create --resource-group <resource_group_name> --plan <appservice_plan_name> --name <name_for_webapp_of_your_choice> --deployment-container-image-name docker.io/<docker_hub_user_name>/todo-app:<tag>
+```
+
+Note: The `<name_for_webapp_of_your_choice>` needs to be unique across all Azure Web Apps and will determine the URL of your deployed app: `https://<name_for_webapp_of_your_choice>.azurewebsites.net`
+
+6. Add the environment variables from your `.env` file by navigating to the [`Azure portal`](https://portal.azure.com/#home) -> `App Services`, then selecting your Web App and navigating to `Settings` -> `Environment variables`. The environment variables can then be added one by one as key-value pairs. Make sure you click 'Apply' at the bottom of the page after adding all of the environment variables.
+
+Note: as well as all of the variables from your `.env` file, you will also need to add `WEBSITES_PORT` will a value of `8000`. This is because, by default, Azure App Services assume that the app is listening on either port `80` or `8080`, when in fact (in the production image) the app listens on port `8000` (see the `Dockerfile`).
+
+7. See your live site at `https://<webapp_name>.azurewebsites.net/`!
+
+### Using the webhook URL to manually update the container
+
+Azure exposes a webhook URL; `POST` requests to this endpoint cause the app to restart, pulling the latest version of the container image from the configured registry.
+
+1. Find your webhook URL by navigating to the [`Azure portal`](https://portal.azure.com/#home) -> `App Services`, then selecting your Web App and navigating to `Deployment` -> `Deployment Center`. If it says `"REDACTED"` for the webhook URL, you may need to enable basic authentication for the App Service's FTP and SCM sites by running:
+
+```bash
+$ az resource update --resource-group <resource_group_name> --name ftp --namespace Microsoft.Web --resource-type basicPublishingCredentialsPolicies --parent sites/<webapp_name>  --set properties.allow=true
+
+$ az resource update --resource-group <resource_group_name> --name scm --namespace Microsoft.Web --resource-type basicPublishingCredentialsPolicies --parent sites/<webapp_name>  --set properties.allow=true
+```
+
+2. Open a Linux/Mac shell (or Git Bash on Windows) and run:
+
+```bash
+$ curl -v -X POST '<webhook_url>'
+```
+
+Note: You must wrap the `<webhook_url>` in single quotes in the terminal as double quotes will treat `$` as a special character.
+
+The response should include a link to a log-stream showing the re-pulling of the image and the restarting of the app.
+
+Note: If this `POST` request returns a `401` error response, you may need to enable basic authentication for the App Service's FTP and SCM sites (if you haven't already); see the instructions in step 1 above.
