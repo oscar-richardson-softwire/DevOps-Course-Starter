@@ -4,7 +4,9 @@
 .venv
 .vscode
 .dockerignore
-.env*
+.env
+.env.j2
+.env.template
 .gitignore
 .gitpod.yml
 Dockerfile
