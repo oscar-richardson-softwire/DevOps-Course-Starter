@@ -10,10 +10,17 @@ on:
       - 'architecture_diagrams/**'
 
 jobs:
-  build:
+  test:
     name: Build and test
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
     - run: docker build --target test --tag test-image .
     - run: docker run --env-file .env.test test-image
+  push-image:
+    name: Build and push image
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    steps:
+    - run: echo Publishing!
