@@ -28,5 +28,5 @@ jobs:
           username: 'oscarrichardson'
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - uses: actions/checkout@v4
-      - run: docker build --target production -t oscarrichardson/todo-app:$GITHUB_SHA .
-      - run: docker push oscarrichardson/todo-app:$GITHUB_SHA
+      - run: docker build --target production -t oscarrichardson/todo-app:$GITHUB_SHA -t oscarrichardson/todo-app:latest .
+      - run: docker push oscarrichardson/todo-app --all-tags
