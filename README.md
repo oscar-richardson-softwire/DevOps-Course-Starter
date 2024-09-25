@@ -273,7 +273,7 @@ $ docker build --target <name_of_build_phase> -t <docker_hub_user_name>/todo-app
 Finally, push the image to Docker Hub by running:
 
 ```bash
-$ docker push <docker_hub_user_name>/todo-app:<tag> .
+$ docker push <docker_hub_user_name>/todo-app:<tag>
 ```
 
 This creates an image with the name `'todo-app'` under your user namespace on Docker Hub (trying to push just `todo-app:<tag>` will error because you won't have permission for the global namespace!).
