@@ -20,7 +20,10 @@ jobs:
   push-image:
     name: Build and push image
     needs: test
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/exercise-9'
     runs-on: ubuntu-latest
     steps:
-    - run: echo Publishing!
+      - uses: docker/login-action@v3
+        with:
+          username: 'oscarrichardson'
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
