@@ -17,8 +17,8 @@ jobs:
     - uses: actions/checkout@v4
     - run: docker build --target test --tag test-image .
     - run: docker run --env-file .env.test test-image
-  push-image:
-    name: Build and push image
+  release:
+    name: Build and release
     needs: test
     if: github.event_name == 'push' && github.ref == 'refs/heads/exercise-9'
     runs-on: ubuntu-latest
@@ -28,6 +28,8 @@ jobs:
           username: 'oscarrichardson'
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - uses: actions/checkout@v4
+        with:
+          ref: 'refs/heads/exercise-9'
       - run: docker build --target production -t oscarrichardson/todo-app:$GITHUB_SHA -t oscarrichardson/todo-app:prod .
       - run: docker push oscarrichardson/todo-app --all-tags
       - run: curl -X POST '${{ secrets.WEBHOOK_URL }}'
