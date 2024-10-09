@@ -1,0 +1,33 @@
+name: Continuous Integration
+on:
+  push:
+    paths-ignore:
+      - '**.md'
+      - 'architecture_diagrams/**'
+  pull_request:
+    paths-ignore:
+      - '**.md'
+      - 'architecture_diagrams/**'
+
+jobs:
+  test:
+    name: Build and test
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - run: docker build --target test --tag test-image .
+    - run: docker run --env-file .env.test test-image
+  release:
+    name: Build and release
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: docker/login-action@v3
+        with:
+          username: 'oscarrichardson'
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - uses: actions/checkout@v4
+      - run: docker build --target production -t oscarrichardson/todo-app:$GITHUB_SHA -t oscarrichardson/todo-app:prod .
+      - run: docker push oscarrichardson/todo-app --all-tags
+      - run: curl -X POST '${{ secrets.WEBHOOK_URL }}'
