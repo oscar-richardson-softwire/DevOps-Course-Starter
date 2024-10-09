@@ -35,3 +35,23 @@ class Item:
         )
 
         return item
+    
+    @classmethod
+    def from_db_item(cls, db_item):
+        """
+        Returns a new Item from an item document from the database.
+
+        Args:
+            cls: The Item class.
+            db_item: The item document from the database.
+
+        Returns:
+            item: The new Item.
+        """
+        item = cls(
+            str(db_item['_id']), 
+            db_item['title'], 
+            db_item['status']
+        )
+
+        return item
