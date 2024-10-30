@@ -25,34 +25,28 @@ def get_items():
 
     return items
 
-# def add_item(title):
-#     """
-#     Adds a new Item to Trello (in the form of a Trello card)
-#     and returns this new Item.
+def add_item(title):
+    """
+    Adds a new Item to the CosmosDB database
+    and returns this new Item.
 
-#     Args:
-#         title: The title of the Item.
+    Args:
+        title: The title of the Item.
 
-#     Returns:
-#         item: The new Item.
-#     """
+    Returns:
+        item: The new Item.
+    """
 
-#     to_do_column_list_id = os.getenv('TRELLO_TO_DO_COLUMN_LIST_ID')
+    db_item = {
+        'title': title,
+        'status': 'Not Started'
+    }
 
-#     url = 'https://api.trello.com/1/cards'
+    db_items.insert_one(db_item) # This adds the inserted _id field to the db_item dictionary!
 
-#     query = {
-#         'idList': to_do_column_list_id,
-#         'name': title
-#     }
-
-#     trello_card = make_request(http_method='POST', url=url, query=query).json()
-
-#     list = get_list_for_trello_card(trello_card)
-
-#     item = Item.from_trello_card(trello_card, list)
-
-#     return item
+    item = Item.from_db_item(db_item)
+    
+    return item
 
 # def update_item_status(id, new_status):
 #     """
