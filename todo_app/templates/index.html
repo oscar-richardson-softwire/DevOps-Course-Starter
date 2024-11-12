@@ -14,7 +14,7 @@
         {% for item in view_model.not_started_items %}
           <li>{{ item.title }}</li>
           <form method="post" action="/update-item-status">
-            <input type="hidden" name="id" id="id" value={{ item.id }}/>
+            <input type="hidden" name="id" id="id" value="{{ item.id }}"/>
             <input type="hidden" name="new-status" id="new-status" value="Done"/>
             <input type="submit" value="Mark as Done"/>
           </form>
@@ -25,7 +25,7 @@
         {% for item in view_model.done_items %}
           <li>{{ item.title }}</li>
           <form method="post" action="/update-item-status">
-            <input type="hidden" name="id" id="id" value={{ item.id }}/>
+            <input type="hidden" name="id" id="id" value="{{ item.id }}"/>
             <input type="hidden" name="new-status" id="new-status" value="Not Started"/>
             <input type="submit" value="Mark as Not Started"/>
           </form>

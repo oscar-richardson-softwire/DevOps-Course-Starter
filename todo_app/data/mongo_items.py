@@ -1,6 +1,7 @@
 import os
 from todo_app.data.classes.Item import Item
 import pymongo
+from bson.objectid import ObjectId
 
 cosmos_db_connection_string = os.getenv('COSMOS_DB_CONNECTION_STRING')
 client = pymongo.MongoClient(cosmos_db_connection_string)
@@ -48,35 +49,16 @@ def add_item(title):
     
     return item
 
-# def update_item_status(id, new_status):
-#     """
-#     Changes the status of the Item with the specified id 
-#     to the specified status (by updating the Trello card)
-#     and returns this Item.
+def update_item_status(id, new_status):
+    """
+    Changes the status of the item with the specified id
+    to the specified status.
 
-#     Args:
-#         id: The id of the Item.
-#         new_status: The new status for the Item.
+    Args:
+        id: The (string) id of the item.
+        new_status: The new status for the item.
 
-#     Returns:
-#         item: The updated Item.
-#     """
-
-#     if new_status == 'Not Started':
-#         column_list_id = os.getenv('TRELLO_TO_DO_COLUMN_LIST_ID')
-#     else:
-#         column_list_id = os.getenv('TRELLO_DONE_COLUMN_LIST_ID')
-
-#     url = f'https://api.trello.com/1/cards/{id}'
-
-#     query = {
-#         'idList': column_list_id,
-#     }
-
-#     trello_card = make_request(http_method='PUT', url=url, query=query).json()
-
-#     list = get_list_for_trello_card(trello_card)
-
-#     item = Item.from_trello_card(trello_card, list)
-
-#     return item
+    Returns:
+        Void.
+    """
+    db_items.update_one({ '_id': ObjectId(id) }, { '$set': { 'status': new_status } })
