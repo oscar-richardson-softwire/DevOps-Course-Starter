@@ -2,10 +2,10 @@
   hosts: webservers
   remote_user: ec2-user
   vars_prompt:
-    - name: trello_api_key
-      prompt: Please enter a Trello API key.
-    - name: trello_api_token
-      prompt: Please enter a Trello API token.
+    - name: cosmos_db_connection_string
+      prompt: Please enter your CosmosDB connection string.
+    - name: db_name
+      prompt: Please enter the database name.
   tasks:
   - name: Install Git
     ansible.builtin.yum:

@@ -40,25 +40,44 @@ $ cp .env.template .env  # (first time only)
 
 The `.env` file is used by flask to set environment variables when running `flask run`. This enables things like development mode (which also enables features like hot reloading when you make a file change). There's also a [SECRET_KEY](https://flask.palletsprojects.com/en/2.3.x/config/#SECRET_KEY) variable which is used to encrypt the flask session cookie.
 
-### Trello REST API
+### CosmosDB database
 
-The app uses Trello to store to-do items (in the form of cards on a Trello board). The app interfaces with Trello using the [Trello REST API](https://developer.atlassian.com/cloud/trello/guides/rest-api/api-introduction/).
+The app uses a CosmosDB database to store to-do items and their statuses. The app interfaces with this database using [PyMongo](https://pymongo.readthedocs.io/en/stable/tutorial.html).
 
 In order to use the app, you will need to do the following:
-1. Create or sign into a [Trello account](https://trello.com/signup)
-2. Create a Trello [Power-Up](https://trello.com/power-ups/admin) (you'll need to associate this Power-Up to a workspace, so you may need to create a workspace if you don't already have one)
-3. After creating a Power-Up, generate a new API key
-4. Set the value for `TRELLO_API_KEY` in your `.env` file to be this new API key 
-5. Generate an API token by clicking on the link on the page displaying your new API key
-6. Set the value for `TRELLO_API_TOKEN` in your `.env` file to be this API token 
-7. Create a new Trello board (in the workspace associated to this Power-Up) to store the to-do cards
-8. Make a `GET` request to `https://api.trello.com/1/members/me/boards?key=<yourApiKey>&token=<yourApiToken>`
-(e.g., using a browser, curl, or a tool such as Postman or the Thunder Client Extension for VS Code)
-9. Find the `id` property of this newly created board in the response and set the value for `TRELLO_BOARD_ID`
-in your `.env` file to be this `id`
-10. Make a `GET` request to `https://api.trello.com/1/boards/<yourBoardId>/lists?key=<yourApiKey>&token=<yourApiToken>`
-11. Find the `id` property of the list with the `name` `'To Do'` in the response and set the value for `TRELLO_TO_DO_COLUMN_LIST_ID` to be this `id`
-12. Find the `id` property of the list with the `name` `'Done'` in the response and set the value for `TRELLO_DONE_COLUMN_LIST_ID` to be this `id`
+1. Follow [`these instructions`](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli) to install the Azure CLI on your machine if you don't have it installed already
+2. Open up a new terminal window and run:
+
+```bash
+$ az login
+```
+
+Which will launch a browser window to allow you to log in to your Azure account
+
+3. Make a note of the name of the resource group that you wish to create the Web App under (creating a new resource group if necessary). You can see the names of your resource groups by navigating to the [`Azure portal`](https://portal.azure.com/#home) -> [`Resource groups`](https://portal.azure.com/#browse/resourcegroups)
+4. Create a new CosmosDB account by running:
+
+```bash
+$ az cosmosdb create --name <cosmos_account_name> --resource-group <resource_group_name> --kind MongoDB --capabilities EnableServerless --server-version 4.2
+```
+
+5. Create a new MongoDB database under that account by running:
+
+```bash
+$ az cosmosdb mongodb database create --account-name <cosmos_account_name> --name <database_name> --resource-group <resource_group_name>
+```
+
+Note: it can take a few minutes for your CosmosDB instance to spin up
+
+6. Retrieve your CosmosDB connection by running:
+
+```bash
+$ az cosmosdb keys list -n <cosmos_account_name> -g <resource_group_name> --type connection-strings
+```
+
+and copying the value of `"connectionString"` for the connection string with description `"Primary MongoDB Connection String"`. Set this as the value for `COSMOS_DB_CONNECTION_STRING` in your `.env` file
+
+7. Set the value for `DB_NAME` in your `.env` file to a name of your choice (when the app tries to connect to this database it will be created if it does not already exist)
 
 ## Running the app locally
 
@@ -248,7 +267,7 @@ From the project root (`DevOps-Course-Starter`), run the following from your pre
 $ ansible-playbook provision-vm.yml -i provision-vm-inventory
 ```
 
-When prompted, enter the Trello API key and Trello API token from your `.env` file. Note that your input for these fields is hidden.
+When prompted, enter the CosmosDB connection string and DB name from your `.env` file. Note that your input for these fields is hidden.
 
 ## Manual deployment
 

@@ -1,5 +1,3 @@
-from todo_app.data.helpers.trello.map_list_name_to_item_status import map_list_name_to_item_status
-
 class Item:
     """
     A to-do item in the app.
@@ -13,29 +11,7 @@ class Item:
         self.id = id
         self.status = status
         self.title = title
-
-    @classmethod
-    def from_trello_card(cls, trello_card, list):
-        """
-        Returns a new Item from a Trello card
-        and the list it belongs to.
-
-        Args:
-            cls: The Item class.
-            trello_card: The Trello card.
-            list: The list that the Trello card belongs to.
-
-        Returns:
-            item: The new Item.
-        """
-        item = cls(
-            trello_card['id'], 
-            trello_card['name'], 
-            map_list_name_to_item_status(list['name'])
-        )
-
-        return item
-    
+   
     @classmethod
     def from_db_item(cls, db_item):
         """
