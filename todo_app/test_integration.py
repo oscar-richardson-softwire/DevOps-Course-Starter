@@ -1,70 +1,58 @@
 import os
 import pytest
-import requests
-from todo_app import app
 from dotenv import load_dotenv, find_dotenv
+import mongomock
+import pymongo
 
 # SETUP
 
 @pytest.fixture
 def client():
-    dotenv_path = find_dotenv('.env.test')
-    load_dotenv(dotenv_path, override=True)
-
-    test_app = app.create_app()
-
-    with test_app.test_client() as client:
-        yield client
-
-class StubResponse():
-    def __init__(self, fake_response_data):
-        self.fake_response_data = fake_response_data
-
-    def json(self):
-        return self.fake_response_data
-
-# Stub replacement for requests.request(http_method, url, params, headers)
-def stub(http_method, url, params, headers):
-    fake_trello_board_id = os.environ.get('TRELLO_BOARD_ID')
-    fake_response_data = None
+    file_path = find_dotenv('.env.test')
+    load_dotenv(file_path, override=True)
     
-    if http_method == 'GET':
-        if url == f'https://api.trello.com/1/boards/{fake_trello_board_id}/lists':
-            fake_response_data = [
-                {
-                    'id': '123abc',
-                    'name': 'To Do',
-                    'cards': [
-                        {'id': '123', 'name': 'Test card 1'},
-                        {'id': '456', 'name': 'Test card 2'}
-                    ]
-                },
-                {
-                    'id': '456def',
-                    'name': 'Done',
-                    'cards': [
-                        {'id': '789', 'name': 'Test card 3'}
-                    ]
-                }
-            ]
-            return StubResponse(fake_response_data)
+    with mongomock.patch(servers=(('fakemongo.com', 27017),)):
+        from todo_app import app
+        test_app = app.create_app()
+        insert_mock_data()
+        with test_app.test_client() as client:
+            yield client
 
-        raise Exception(f'Integration test did not expect URL "{url}"')
-    raise Exception(f'Integration test did not expect HTTP method "{http_method}"')
+def insert_mock_data():
+    cosmos_db_connection_string = os.environ.get('COSMOS_DB_CONNECTION_STRING')
+    mongo_client = pymongo.MongoClient(cosmos_db_connection_string)
+
+    db_name = os.environ.get('DB_NAME')
+    db = mongo_client[db_name]
+    db_items = db.items
+
+    items_to_insert = [
+        {
+            'title': 'Test card 1',
+            'status': 'Not Started'
+        },
+        {
+            'title': 'Test card 2',
+            'status': 'Not Started'
+        },
+        {
+            'title': 'Test card 3',
+            'status': 'Done'
+        }
+    ]
+
+    db_items.insert_many(items_to_insert)
+
+
 
 # TESTS
 
-def test_index_page(monkeypatch, client):
-    monkeypatch.setattr(requests, 'request', stub)
-
+def test_index_page(client):
     response = client.get('/')
 
     assert response.status_code == 200
     assert 'Mark as Done' in response.data.decode()
     assert 'Test card 1' in response.data.decode()
-    assert '123' in response.data.decode()
     assert 'Test card 2' in response.data.decode()
-    assert '456' in response.data.decode()
     assert 'Mark as Not Started' in response.data.decode()
     assert 'Test card 3' in response.data.decode()
-    assert '789' in response.data.decode()
